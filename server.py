@@ -38,7 +38,7 @@ def validate_repo(owner: str, repo: str):
         or not re.fullmatch(pattern, owner)
         or not re.fullmatch(pattern, repo)
     ):
-        raise ValueError(
+        raise TypeError(
             "Invalid GitHub owner or repository name."
         )
 
@@ -180,7 +180,7 @@ def read_repository_file(
     )
 
     if isinstance(data, list):
-        raise ValueError("The requested path is a directory.")
+        raise TypeError("The requested path is a directory.")
 
     if data.get("type") != "file":
         raise ValueError("The requested resource is not a file.")
