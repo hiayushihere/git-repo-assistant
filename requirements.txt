@@ -47,3 +47,6 @@ urllib3==2.8.0
 uv==0.12.24
 uvicorn==0.54.0
 websockets==16.1.1
+pytest
+ruff
+
