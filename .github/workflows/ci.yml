@@ -42,7 +42,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::509399610903:role/GitHubActionsDeployRole
-          aws-region: ap-south-1
+          aws-region: us-east-1
 
       - name: Send deployment command to EC2
         id: deploy
