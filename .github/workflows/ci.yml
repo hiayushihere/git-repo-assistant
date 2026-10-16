@@ -58,14 +58,18 @@ jobs:
           echo "command_id=$COMMAND_ID" >> "$GITHUB_OUTPUT"
 
       
-      - name: Wait for deployment and show error
-        if: always()
+      
+      - name: Wait for deployment
         shell: bash
         run: |
+          aws ssm wait command-executed \
+            --region us-east-1 \
+            --command-id "${{ steps.deploy.outputs.command_id }}" \
+            --instance-id i-027b1443307a7b20f
+
           aws ssm get-command-invocation \
             --region us-east-1 \
             --command-id "${{ steps.deploy.outputs.command_id }}" \
             --instance-id i-027b1443307a7b20f \
             --query '{Status:Status,Output:StandardOutputContent,Error:StandardErrorContent}' \
             --output json
-
