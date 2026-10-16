@@ -129,7 +129,7 @@ async def main():
                                     disable=True
                                 )
                             ),
-                            max_output_tokens=1500,
+                            max_output_tokens=3000,
                         ),
                     )
 
