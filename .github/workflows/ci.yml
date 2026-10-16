@@ -42,5 +42,28 @@ jobs:
           role-to-assume: arn:aws:iam::509399610903:role/GitHubActionsDeployRole
           aws-region: ap-south-1
 
-      - name: Verify AWS identity
-        run: aws sts get-caller-identity
+      
+      - name: Send deployment command to EC2
+        id: deploy
+        run: |
+          COMMAND_ID=$(aws ssm send-command \
+            --instance-ids i-027b1443307a7b20f \
+            --document-name "AWS-RunShellScript" \
+            --comment "Deploy GitHub Repository Assistant" \
+            --parameters '{"commands":["set -e","cd /home/ec2-user/git-repo-assistant","git fetch origin master","git reset --hard origin/master","source .venv/bin/activate","python -m pip install -r requirements.txt"]}' \
+            --query "Command.CommandId" \
+            --output text)
+          echo "command_id=$COMMAND_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for deployment
+        run: |
+          aws ssm wait command-executed \
+            --command-id "${{ steps.deploy.outputs.command_id }}" \
+            --instance-id i-027b1443307a7b20f
+
+          aws ssm get-command-invocation \
+            --command-id "${{ steps.deploy.outputs.command_id }}" \
+            --instance-id i-027b1443307a7b20f \
+            --query '{Status:Status,Output:StandardOutputContent,Error:StandardErrorContent}' \
+            --output json
+
