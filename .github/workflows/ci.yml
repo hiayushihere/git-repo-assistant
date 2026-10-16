@@ -52,7 +52,7 @@ jobs:
             --instance-ids i-027b1443307a7b20f \
             --document-name "AWS-RunShellScript" \
             --comment "Deploy GitHub Repository Assistant" \
-            --parameters '{"commands":["set -e","cd /home/ec2-user/git-repo-assistant","git fetch origin master","git reset --hard origin/master","source .venv/bin/activate","python -m pip install -r requirements.txt"]}' \
+            --parameters '{"commands":["set -e","cd /home/ec2-user/git-repo-assistant","git config --global --add safe.directory /home/ec2-user/git-repo-assistant","git fetch origin master","git reset --hard origin/master","source .venv/bin/activate","python -m pip install -r requirements.txt"]}' \
             --query "Command.CommandId" \
             --output text)
           echo "command_id=$COMMAND_ID" >> "$GITHUB_OUTPUT"
